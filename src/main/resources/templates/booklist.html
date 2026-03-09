@@ -31,7 +31,8 @@
     <td th:text="${book.category.categoryName}"></td>
 
     <td><a th:href="@{/edit/{id}(id=${book.id})}">Muokkaa</a></td>
-    <td><a th:href="@{/delete/{id}(id=${book.id})}">Poista</a></td>
+    <td sec:authorize="hasAuthority('ADMIN')">
+    <a th:href="@{/delete/{id}(id=${book.id})}">Poista</a></td>
   </tr>
 </table>
 

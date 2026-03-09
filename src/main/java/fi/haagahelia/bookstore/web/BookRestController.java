@@ -2,6 +2,7 @@ package fi.haagahelia.bookstore.web;
 
 import java.util.Optional;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +20,7 @@ public class BookRestController {
 
     private final BookRepository bookRepository; 
    
-    
+
     public BookRestController(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
@@ -47,6 +48,7 @@ public class BookRestController {
         return bookRepository.save(editedBook);
     }
     
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/books/{id}")
     public Iterable<Book> deleteBook(@PathVariable Long id) {
         bookRepository.deleteById(id);

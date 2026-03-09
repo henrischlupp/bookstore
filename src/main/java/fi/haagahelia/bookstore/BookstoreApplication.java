@@ -4,17 +4,16 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fi.haagahelia.bookstore.domain.Book;
-import fi.haagahelia.bookstore.domain.BookRepository;
-import fi.haagahelia.bookstore.domain.CategoryRepository;
-import fi.haagahelia.bookstore.domain.Category;
+import fi.haagahelia.bookstore.domain.*;
 
 @SpringBootApplication
 public class BookstoreApplication {
 
+    
     private static final Logger log = LoggerFactory.getLogger(BookstoreApplication.class);
 
     public static void main(String[] args) {
@@ -22,7 +21,12 @@ public class BookstoreApplication {
     }
 
     @Bean
-    public CommandLineRunner demo(BookRepository repository, CategoryRepository crepository) {
+    public CommandLineRunner demo(
+        BookRepository repository,
+        CategoryRepository crepository,
+        AppUserRepository urepository,
+        BCryptPasswordEncoder passwordEncoder ) {
+            
         return (args) -> {
             log.info("Tallennetaan testidataa...");
 
@@ -49,6 +53,16 @@ public class BookstoreApplication {
             repository.save(new Book("Sapiens: A Brief History of Humankind", "Yuval Noah Harari", 2011, 9780062316097L, 18.99, c3));
 
             log.info("Testidata lisätty");
+            //tässä lisään testi käyttäjät
+            urepository.save(new AppUser("user",
+                    passwordEncoder.encode("user"),
+                    "USER",
+                    "user@email.com"));
+
+            urepository.save(new AppUser("admin",
+                    passwordEncoder.encode("admin"),
+                    "ADMIN",
+                    "admin@email.com"));
         };
-    }
+    };
 }
